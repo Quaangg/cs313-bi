@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Tra cứu</h2>
+
+    <form class="row g-3 mb-4" method="get" action="/search">
+        <div class="col-md-4">
+            <input type="text" name="q" class="form-control" placeholder="Từ khóa..." value="{{ query }}">
+        </div>
+        <div class="col-md-2">
+            <select name="type" class="form-select">
+                <option value="user" {% if type_ == 'user' %}selected{% endif %}>Người dùng</option>
+                <option value="course" {% if type_ == 'course' %}selected{% endif %}>Khóa học</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="sort_by" class="form-select">
+                <option value="id" {% if sort_by == 'id' %}selected{% endif %}>Sắp xếp theo ID</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="order" class="form-select">
+                <option value="asc" {% if order == 'asc' %}selected{% endif %}>Tăng dần</option>
+                <option value="desc" {% if order == 'desc' %}selected{% endif %}>Giảm dần</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+        </div>
+    </form>
+
+    {% if data %}
+    <table class="table table-bordered">
+        <thead>
+            {% if type_ == 'user' %}
+            <tr><th>UID</th><th>Họ tên</th><th>Giới tính</th><th>Trường</th><th>Năm sinh</th></tr>
+            {% else %}
+            <tr><th>Course ID</th></tr>
+            {% endif %}
+        </thead>
+        <tbody>
+            {% for row in data %}
+                {% if type_ == 'user' %}
+                <tr>
+                    <td><a href="/user/{{ row.uid }}">{{ row.uid }}</a></td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.gender }}</td>
+                    <td>{{ row.school }}</td>
+                    <td>{{ row.yob }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td><a href="/course/{{ row.cid }}">{{ row.cid }}</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="text-muted">Không tìm thấy dữ liệu.</p>
+    {% endif %}
+</div>
+{% endblock %}

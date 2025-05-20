@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Thông tin người dùng</h2>
+    <p><strong>UID:</strong> {{ user.uid }}</p>
+    <p><strong>Họ tên:</strong> {{ user.name }}</p>
+    <p><strong>Trường:</strong> {{ user.school }}</p>
+    <p><strong>Giới tính:</strong> {{ user.gender }}</p>
+    <p><strong>Năm sinh:</strong> {{ user.yob }}</p>
+
+    {% if predict is not none %}
+        <p><strong>Nhãn dự đoán:</strong> 
+            <span style="color: {% if predict == 0 %}red{% elif predict == 1 %}green{% else %}orange{% endif %}; font-weight: bold;">
+                {{ predict }}
+            </span>
+        </p>
+    {% endif %}
+
+    <h3 class="mt-4">Tiến độ các khóa học</h3>
+    {% if progress_data %}
+        <ul class="list-group">
+            {% for c in progress_data %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <a href="/course/{{ c.cid }}"><strong>{{ c.cid }}</strong></a>
+                        <span>{{ c.progress }}%</span>
+                    </div>
+                    <div class="progress mt-2" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ c.progress }}%">
+                            {{ c.progress }}%
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">Người dùng này chưa đăng ký khóa học nào.</p>
+    {% endif %}
+</div>
+{% endblock %}

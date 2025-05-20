@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Thông tin khóa học: {{ course.cid }}</h2>
+
+    <h3>Thông tin khóa học</h3>
+    <p><strong>Tên khóa học:</strong> {{ course.name }}</p>
+    <p><strong>Mô tả:</strong> {{ course.description }}</p>
+    <h3>Tỉ lệ hoàn thành trung bình của khóa học</h3>
+    <p><strong>Tỉ lệ hoàn thành trung bình:</strong> {{ avg_completion_rate * 100 | round(2) }}%</p>
+    <h3>Danh sách người dùng đã đăng ký khóa học</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>UID</th>
+                <th>Họ tên</th>
+                <th>Mức độ hoàn thành</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for uid, user in users.items() %}
+            <tr>
+                <td><a href="/user/{{ uid }}">{{ uid }}</a></td>
+                <td>{{ user.name }}</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ user.completion_rate * 100 }}%" aria-valuenow="{{ user.completion_rate * 100 }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ user.completion_rate * 100 | round(2) }}%
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

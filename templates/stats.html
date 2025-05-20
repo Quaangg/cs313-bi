@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">📊 Thống kê hệ thống</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Tỉ lệ người dùng hoạt động</h5>
+                    <p class="card-text fs-4 text-primary">{{ active_user_rate }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng số người dùng</h5>
+                    <p class="card-text fs-4">{{ total_users }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Tổng lượt đăng ký khóa học</h5>
+                    <p class="card-text fs-4">{{ total_course_registrations }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Phân bố nhãn user_predict</h5>
+                    <canvas id="labelChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Top 10 khóa học hoạt động</h5>
+                    <canvas id="topCoursesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const labelCtx = document.getElementById('labelChart').getContext('2d');
+    new Chart(labelCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [{
+                label: 'Số lượng',
+                data: {{ label_counts | tojson }},
+                backgroundColor: ['#36A2EB', '#FFCE56', '#FF6384'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    const courseCtx = document.getElementById('topCoursesChart').getContext('2d');
+    new Chart(courseCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ top_course_labels | tojson }},
+            datasets: [{
+                label: 'Số hoạt động',
+                data: {{ top_course_counts | tojson }},
+                backgroundColor: '#4BC0C0'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
